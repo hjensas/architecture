@@ -1,0 +1,221 @@
+#
+# CHANGEME:
+#
+# - Change "spec.networks[*].dnsDomain" to use something more specific if desired
+# - Change "spec.networks[*].subnets[0].(allocationRanges|cidr|gateway)" to use different IPs if needed
+#
+
+apiVersion: network.openstack.org/v1beta1
+kind: NetConfig
+metadata:
+  name: netconfig
+  namespace: openstack
+spec:
+  networks:
+    - dnsDomain: ctlplane.example.com
+      name: CtlPlane
+      subnets:
+        - allocationRanges:
+            - end: 192.168.122.120 # CHANGEME
+              start: 192.168.122.100 # CHANGEME
+            - end: 192.168.122.200 # CHANGEME
+              start: 192.168.122.150 # CHANGEME
+          cidr: 192.168.122.0/24 # CHANGEME
+          gateway: 192.168.122.1 # CHANGEME
+          name: subnet1
+          routes:
+            - destination: 192.168.123.0/24
+              nexthop: 192.168.122.1
+            - destination: 192.168.124.0/24
+              nexthop: 192.168.122.1
+        - allocationRanges:
+            - end: 192.168.123.120 # CHANGEME
+              start: 192.168.123.100 # CHANGEME
+            - end: 192.168.123.200 # CHANGEME
+              start: 192.168.123.150 # CHANGEME
+          cidr: 192.168.123.0/24 # CHANGEME
+          gateway: 192.168.123.1 # CHANGEME
+          name: subnet2
+          routes:
+            - destination: 192.168.122.0/24
+              nexthop: 192.168.123.1
+            - destination: 192.168.124.0/24
+              nexthop: 192.168.123.1
+        - allocationRanges:
+            - end: 192.168.124.120 # CHANGEME
+              start: 192.168.124.100 # CHANGEME
+            - end: 192.168.124.200 # CHANGEME
+              start: 192.168.124.150 # CHANGEME
+          cidr: 192.168.124.0/24 # CHANGEME
+          gateway: 192.168.124.1 # CHANGEME
+          name: subnet3
+          routes:
+            - destination: 192.168.122.0/24
+              nexthop: 192.168.124.1
+            - destination: 192.168.123.0/24
+              nexthop: 192.168.124.1
+    - dnsDomain: internalapi.example.com
+      name: InternalApi
+      subnets:
+        - allocationRanges:
+            - end: 172.17.0.250
+              start: 172.17.0.100
+          cidr: 172.17.0.0/24
+          gateway: 172.17.0.1
+          name: subnet1
+          vlan: 20
+          routes:
+            - destination: 172.17.1.0/24
+              nexthop: 172.17.0.1
+            - destination: 172.17.2.0/24
+              nexthop: 172.17.0.1
+        - allocationRanges:
+            - end: 172.17.1.250
+              start: 172.17.1.100
+          cidr: 172.17.1.0/24
+          gateway: 172.17.1.1
+          name: subnet2
+          vlan: 20
+          routes:
+            - destination: 172.17.0.0/24
+              nexthop: 172.17.1.1
+            - destination: 172.17.2.0/24
+              nexthop: 172.17.1.1
+        - allocationRanges:
+            - end: 172.17.2.250
+              start: 172.17.2.100
+          cidr: 172.17.2.0/24
+          gateway: 172.17.2.1
+          name: subnet3
+          vlan: 20
+          routes:
+            - destination: 172.17.0.0/24
+              nexthop: 172.17.2.1
+            - destination: 172.17.1.0/24
+              nexthop: 172.17.2.1
+    - dnsDomain: external.example.com
+      name: External
+      subnets:
+        - allocationRanges:
+            - end: 10.0.0.250
+              start: 10.0.0.100
+          cidr: 10.0.0.0/24
+          gateway: 10.0.0.1
+          name: subnet1
+    - dnsDomain: storage.example.com
+      name: Storage
+      subnets:
+        - allocationRanges:
+            - end: 172.18.0.250
+              start: 172.18.0.100
+          cidr: 172.18.0.0/24
+          gateway: 172.18.0.1
+          name: subnet1
+          vlan: 21
+          routes:
+            - destination: 172.18.1.0/24
+              nexthop: 172.18.0.1
+            - destination: 172.18.2.0/24
+              nexthop: 172.18.0.1
+        - allocationRanges:
+            - end: 172.18.1.250
+              start: 172.18.1.100
+          cidr: 172.18.1.0/24
+          gateway: 172.18.1.1
+          name: subnet2
+          vlan: 21
+          routes:
+            - destination: 172.18.0.0/24
+              nexthop: 172.18.1.1
+            - destination: 172.18.2.0/24
+              nexthop: 172.18.1.1
+        - allocationRanges:
+            - end: 172.18.2.250
+              start: 172.18.2.100
+          cidr: 172.18.2.0/24
+          gateway: 172.18.2.1
+          name: subnet3
+          vlan: 21
+          routes:
+            - destination: 172.18.0.0/24
+              nexthop: 172.18.2.1
+            - destination: 172.18.1.0/24
+              nexthop: 172.18.2.1
+      mtu: 9000
+    - dnsDomain: storagemgmt.example.com
+      name: StorageMgmt
+      subnets:
+        - allocationRanges:
+            - end: 172.20.0.250
+              start: 172.20.0.100
+          cidr: 172.20.0.0/24
+          name: subnet1
+          vlan: 23
+          routes:
+            - destination: 172.20.1.0/24
+              nexthop: 172.20.0.1
+            - destination: 172.20.2.0/24
+              nexthop: 172.20.0.1
+        - allocationRanges:
+            - end: 172.20.1.250
+              start: 172.20.1.100
+          cidr: 172.20.1.0/24
+          gateway: 172.20.1.1
+          name: subnet2
+          vlan: 21
+          routes:
+            - destination: 172.20.0.0/24
+              nexthop: 172.20.1.1
+            - destination: 172.20.2.0/24
+              nexthop: 172.20.1.1
+        - allocationRanges:
+            - end: 172.20.2.250
+              start: 172.20.2.100
+          cidr: 172.20.2.0/24
+          gateway: 172.20.2.1
+          name: subnet3
+          vlan: 21
+          routes:
+            - destination: 172.20.0.0/24
+              nexthop: 172.20.2.1
+            - destination: 172.20.1.0/24
+              nexthop: 172.20.2.1
+      mtu: 9000
+    - dnsDomain: tenant.example.com
+      name: Tenant
+      subnets:
+        - allocationRanges:
+            - end: 172.19.0.250
+              start: 172.19.0.100
+          cidr: 172.19.0.0/24
+          name: subnet1
+          vlan: 22
+          routes:
+            - destination: 172.19.1.0/24
+             nexthop: 172.19.0.1
+            -  destination: 172.19.2.0/24
+              nexthop: 172.19.0.1
+        - allocationRanges:
+            - end: 172.19.1.250
+              start: 172.19.1.100
+          cidr: 172.19.1.0/24
+          gateway: 172.19.1.1
+          name: subnet2
+          vlan: 21
+          routes:
+            - destination: 172.19.0.0/24
+              nexthop: 172.19.1.1
+            - destination: 172.19.2.0/24
+              nexthop: 172.19.1.1
+        - allocationRanges:
+            - end: 172.19.2.250
+              start: 172.19.2.100
+          cidr: 172.19.2.0/24
+          gateway: 172.19.2.1
+          name: subnet3
+          vlan: 21
+          routes:
+            - destination: 172.19.0.0/24
+              nexthop: 172.19.2.1
+            - destination: 172.19.1.0/24
+              nexthop: 172.19.2.1
